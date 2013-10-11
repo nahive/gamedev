@@ -28,6 +28,7 @@ i { font-family: ubuntuitalic; }
 }
 
 #log {
+	display: none;
 	-moz-animation-delay: 0.5s;
 	-webkit-animation-delay: 0.5s;
 }

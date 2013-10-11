@@ -7,6 +7,7 @@ function resizetoView(){
 }
 
 function loginPhase(){
+ $('#log').show();
  $('#log').addClass('animated fadeInDown');
 
    // dla buttonu jakis ladna animacja 
