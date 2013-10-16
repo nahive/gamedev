@@ -2,9 +2,12 @@
 function resizetoView(){
   var viewportWidth = $(window).width();
   var viewportHeight = $(window).height();
-   $('.screen').height(viewportHeight);
-   $('.screen').width(viewportWidth);
+   $('#profil').height(viewportHeight);
+   $('#profil').width(viewportWidth);
 }
+
+var name = "";
+var pass = "";
 
 function loginPhase(){
  $('#log').show();
@@ -15,9 +18,9 @@ function loginPhase(){
   	  if($("form")[0].checkValidity()){
   	  	$(this).addClass('animated bounceOut');
   	  	$("#log").addClass('animated fadeOutDown');
-  	   var name = $('[name=name]').val();
-       var pass = $('[name=pass]').val();  
-       setTimeout(searchPhase, 1500);
+  	   name = $('[name=login]').val();
+       pass = $('[name=pass]').val();  
+       setTimeout(playPhase, 1500);
   	  }
   	  else {
   	  	window.alert("Please enter nick")
@@ -25,8 +28,20 @@ function loginPhase(){
   });
 }
 
+function playPhase() {
+  $('#log').hide();
+  $('#myName').text(name);
+  $('#profil').show();
+  $('#profil').addClass('animated fadeInDown');
+  $('#playMe').click(function() {
+    $(this).addClass('animated bounceOut');
+        $("#profil").addClass('animated fadeOutDown');     
+       setTimeout(searchPhase, 1500);
+  });
+}
+
 function searchPhase(){
-    $("#log").hide();
+    $("#profil").hide();    
     $("#search").show();
     $("#search").addClass('animated fadeInDown');
   }

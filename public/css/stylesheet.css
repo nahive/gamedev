@@ -33,6 +33,29 @@ i { font-family: ubuntuitalic; }
 	-webkit-animation-delay: 0.5s;
 }
 
+#profil {
+	display: none;
+}
+
+#playMe {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -40px;
+}
+
+#head {
+	width: 100%;
+	text-align: right;
+	color: #fff;
+	font-family: 'ubuntulight';
+}
+
+#myName {
+	font-size: 25px;
+	padding-top: 20px;
+	padding-right: 20px;
+}
 
 #login, #pass {
 	margin: 5px;
@@ -46,12 +69,13 @@ i { font-family: ubuntuitalic; }
 	float: left;
 }
 
-#logMe {	
+#logMe, #playMe {	
 	width: 80px;
 	height: 80px;
 	border-radius: 40px;
 	text-align: center;
 	margin-top: 4px;
+	outline: none;
 
 	font-size: 1.4em;
 	font-weight: 900;
