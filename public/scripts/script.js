@@ -34,6 +34,8 @@ function loginPhase(){
 function playPhase() {
   $('#log').hide();
   $('#myName').text("Welcome, " + name);
+  $('#wins').attr('title','You won ' + wins + ' times.');
+  $('#looses').attr('title','You lost ' + looses + ' times.');
   $('#profil').show();
   $('#profil').addClass('animated fadeInDown');
   $('#playMe').click(function() {
