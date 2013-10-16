@@ -6,8 +6,11 @@ function resizetoView(){
    $('#profil').width(viewportWidth);
 }
 
+
 var name = "";
 var pass = "";
+var wins = 3;
+var looses = 7;
 
 function loginPhase(){
  $('#log').show();
@@ -30,7 +33,7 @@ function loginPhase(){
 
 function playPhase() {
   $('#log').hide();
-  $('#myName').text(name);
+  $('#myName').text("Welcome, " + name);
   $('#profil').show();
   $('#profil').addClass('animated fadeInDown');
   $('#playMe').click(function() {

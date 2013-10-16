@@ -32,18 +32,6 @@ i { font-family: ubuntuitalic; }
 	-moz-animation-delay: 0.5s;
 	-webkit-animation-delay: 0.5s;
 }
-
-#profil {
-	display: none;
-}
-
-#playMe {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -40px;
-}
-
 #head {
 	width: 100%;
 	text-align: right;
@@ -51,11 +39,7 @@ i { font-family: ubuntuitalic; }
 	font-family: 'ubuntulight';
 }
 
-#myName {
-	font-size: 25px;
-	padding-top: 20px;
-	padding-right: 20px;
-}
+
 
 #login, #pass {
 	margin: 5px;
@@ -86,6 +70,23 @@ i { font-family: ubuntuitalic; }
 	
 }
 
+#profil {
+	display: none;
+}
+
+#playMe {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -40px;
+}
+
+#myName {
+	font-size: 25px;
+	padding-top: 20px;
+	padding-right: 20px;
+}
+
 #search {
 	display: none;
 	margin-left: -50px;
@@ -96,6 +97,30 @@ i { font-family: ubuntuitalic; }
 	font-weight: bold;
 	text-shadow: white 0px 0px 1px;
 
+}
+
+#scores {
+	width: 40%;
+	margin-left: 20px;
+	position: relative;
+}
+#wins {
+	width: 200px;
+	height: 600px;
+    float: left;
+    bottom: 0;
+
+    background: green;
+    opacity: 0.1;
+}
+
+#looses {
+	width: 200px;
+	height: 300px;
+    margin: 0 0 0 202px;
+
+    background: red;
+	opacity: 0.1;
 }
 
 #search p {
