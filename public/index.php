@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<!-- CREATED BY SZYMON MASLANKA and ADAM MATEJA-->
+	
+
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>WebGameDev</title>
@@ -17,10 +19,8 @@
 </head>
 <body>
 
-<?php echo "string"; ?>
+
 	<div id="main" role="main">
-
-
 		<!-- <canvas id="gameCanvas"></canvas>
 				<script src="http://localhost:8000/socket.io/socket.io.js"></script>
 				<script src="scripts/requestAnimationFrame.js"></script>
@@ -36,9 +36,10 @@
 		<div class="log-center">
 				<form id="log" method="post">
 						<input type="text" id="login" name="login" placeholder="nick" required>
-						<input type="password" id="pass" name="pass" placeholder="password">
+						<input type="password" id="pass" name="pass" placeholder="password" required>
 						<input type="button" id="logMe" value="Ok">
 				</form>
+
 				<div id="search">
 					<p> Please wait <br/> Looking for players </p>
 					<img src="images/loader.gif">

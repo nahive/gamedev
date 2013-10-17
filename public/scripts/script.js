@@ -18,25 +18,78 @@ function loginPhase(){
 
    // dla buttonu jakis ladna animacja 
   $('#logMe').click(function(){
-  	  if($("form")[0].checkValidity()){
-  	  	$(this).addClass('animated bounceOut');
-  	  	$("#log").addClass('animated fadeOutDown');
-  	   name = $('[name=login]').val();
-       pass = $('[name=pass]').val();  
-       setTimeout(playPhase, 1500);
-  	  }
-  	  else {
-  	  	window.alert("Please enter nick")
-  	  }	  
+    
+     name = $('[name=login]').val();
+     pass = $('[name=pass]').val(); 
+
+         $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'check', name: name, pass: pass},
+          success: function(msg){      
+          letMeGo(msg);
+          }
+        });   
+
   });
 }
+
+
+function letMeGo(feedback) {
+  if($("form")[0].checkValidity()){
+      if (feedback == 'valid' || feedback == 'notfound') {
+          $('#logMe').addClass('animated bounceOut');
+          $("#log").addClass('animated fadeOutDown');
+         setTimeout(playPhase, 1500);
+       } else if (feedback == 'invalid' ){
+          window.alert("check password")
+       } 
+      }
+      else {
+        window.alert("Please enter nick and pass")
+      }   
+}
+
+  function winsCount() {
+      $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'getwins', name: name},
+          success: function(msg){                  
+          wins = +msg[msg.length -2]; 
+          loosesCount();
+          }
+        });    
+  }
+
+    function loosesCount() {
+      $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'getlooses', name: name},
+          success: function(msg){                  
+          looses = +msg[msg.length -1];
+          scoreCount();
+          }
+        });    
+  }
+
+  function scoreCount() {
+    var sum = wins + looses;
+  }
+
+// parse int nie dziala, bo chuj wie jaka tablice zwraca msg. wiec nie mozemy wygenerowac wielkosci paskow
+
+
 
 function playPhase() {
   $('#log').hide();
   $('#myName').text("Welcome, " + name);
   $('#wins').attr('title','You won ' + wins + ' times.');
   $('#looses').attr('title','You lost ' + looses + ' times.');
+  winsCount();
   $('#profil').show();
+  $('#scores').show("slide", {direction: "down"}, 2500);
   $('#profil').addClass('animated fadeInDown');
   $('#playMe').click(function() {
     $(this).addClass('animated bounceOut');
