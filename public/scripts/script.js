@@ -12,6 +12,18 @@ var pass = "";
 var wins = 3;
 var looses = 7;
 
+
+function ajaxParser(msg, type) {
+  var size = msg[0];
+  name = "";
+
+  for (var i = 1; i < size+1; i++) {
+    name = name + msg[i];
+  }
+
+  console.log(name);
+}
+
 function loginPhase(){
  $('#log').show();
  $('#log').addClass('animated fadeInDown');
@@ -26,7 +38,7 @@ function loginPhase(){
           url: 'base.php',
           type: 'POST',
           data: {action: 'check', name: name, pass: pass},
-          success: function(msg){      
+          success: function(msg){           
           letMeGo(msg);
           }
         });   
@@ -36,16 +48,18 @@ function loginPhase(){
 
 
 function letMeGo(feedback) {
-  if($("form")[0].checkValidity()){
-      if (feedback == 'valid' || feedback == 'notfound') {
+  if($("form")[0].checkValidity() || feedback == 'alreadyLogged'){
+      if (feedback == 'valid' || feedback == 'notfound' || feedback == 'alreadyLogged') {        
           $('#logMe').addClass('animated bounceOut');
           $("#log").addClass('animated fadeOutDown');
          setTimeout(playPhase, 1500);
        } else if (feedback == 'invalid' ){
-          window.alert("check password")
+          $('#logMe').addClass('animated shake');
+          window.alert("check password");
+          $('#logMe').removeClass('animated shake');
        } 
       }
-      else {
+      else {        
         window.alert("Please enter nick and pass")
       }   
 }
@@ -56,7 +70,8 @@ function letMeGo(feedback) {
           type: 'POST',
           data: {action: 'getwins', name: name},
           success: function(msg){                  
-          wins = +msg[msg.length -2]; 
+          wins = msg; 
+     
           loosesCount();
           }
         });    
@@ -68,7 +83,8 @@ function letMeGo(feedback) {
           type: 'POST',
           data: {action: 'getlooses', name: name},
           success: function(msg){                  
-          looses = +msg[msg.length -1];
+          looses = msg;
+         
           scoreCount();
           }
         });    
@@ -92,9 +108,19 @@ function playPhase() {
   $('#scores').show("slide", {direction: "down"}, 2500);
   $('#profil').addClass('animated fadeInDown');
   $('#playMe').click(function() {
-    $(this).addClass('animated bounceOut');
+    $(this).addClass('animated rotateOut');
         $("#profil").addClass('animated fadeOutDown');     
        setTimeout(searchPhase, 1500);
+  });
+  $('#killer').click(function(){
+    $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'killMe'}, 
+          success: function(msg){                  
+          location.reload();         
+          }
+      });               
   });
 }
 
@@ -106,8 +132,25 @@ function searchPhase(){
 
 $(document).ready( function(){
   resizetoView();
-  $(window).bind('resize', resizetoView);
-  loginPhase();
+  $(window).bind('resize', resizetoView); 
+
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'checkSession'},
+          success: function(msg){
+            name = msg;          
+
+            if (name != "notlogged") {
+              letMeGo('alreadyLogged');                
+            } else {            
+              loginPhase();
+            }
+          }
+        });
+
+
+  
 
     // tooltips :) via http://osvaldas.info/elegant-css-and-jquery-tooltip-responsive-mobile-friendly
 

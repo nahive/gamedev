@@ -12,7 +12,7 @@
 
 	<link type="text/css" rel="stylesheet" href="css/animate.min.css"/>
 	<link type="text/css" rel="stylesheet" href="css/stylesheet.css"/>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="scripts/jquery.min.js"></script>
 	<script src="scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="scripts/script.js"></script>	
 
@@ -49,6 +49,8 @@
 			<header id="head">
 				<p id="myName">					
 				</p>
+				<input type="button" id='killer'>
+
 			</header>
 			<input id="playMe" type="button" value="Play">
 			<div id="scores">
