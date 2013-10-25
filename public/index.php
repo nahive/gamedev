@@ -14,25 +14,16 @@
 	<link type="text/css" rel="stylesheet" href="css/stylesheet.css"/>
 	<script src="scripts/jquery.min.js"></script>
 	<script src="scripts/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="scripts/script.js"></script>	
+	<script type="text/javascript" src="scripts/script.js"></script>
+	<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+	<script src="js_game/requestAnimationFrame.js"></script>
+	<script src="js_game/Keys.js"></script>
+	<script src="js_game/Player.js"></script>
+	<script src="js_game/game.js"></script>	
 
 </head>
 <body>
-
-
 	<div id="main" role="main">
-		<!-- <canvas id="gameCanvas"></canvas>
-				<script src="http://localhost:8000/socket.io/socket.io.js"></script>
-				<script src="scripts/requestAnimationFrame.js"></script>
-				<script src="scripts/Keys.js"></script>
-				<script src="scripts/Player.js"></script>
-				<script src="scripts/game.js"></script>
-				<script>
-					// Initialise the game
-					init();
-					animate();
-				</script> -->
-
 		<div class="log-center">
 				<form id="log" method="post">
 						<input type="text" id="login" name="login" placeholder="nick" required>
@@ -47,16 +38,20 @@
 		</div>
 		<div id="profil"> 
 			<header id="head">
-				<p id="myName">					
-				</p>
-				<input type="button" id='killer'>
+			<input type="button" id='killer'>
+				<p id="myName"></p>
+
+				
 
 			</header>
 			<input id="playMe" type="button" value="Play">
 			<div id="scores">
-				<div id="wins" rel="tooltip">wins</div>
-				<div id="looses" rel="tooltip">looses</div>
+				<div id="wins" rel="tooltip"><p>wins</p></div>
+				<div id="looses" rel="tooltip"><p>looses</p></div>
 			</div>
+		</div>
+		<div id="game">
+			<canvas id="gameCanvas"></canvas>
 		</div>
 	</div>
 	<div id="footer">

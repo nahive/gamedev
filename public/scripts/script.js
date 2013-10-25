@@ -1,7 +1,10 @@
 // funkcja do automatycznego resizowania, nie wiem czy bedize potrzeba
+var viewportWidth;
+var viewportHeight;
+
 function resizetoView(){
-  var viewportWidth = $(window).width();
-  var viewportHeight = $(window).height();
+  viewportWidth = $(window).width();
+  viewportHeight = $(window).height();
    $('#profil').height(viewportHeight);
    $('#profil').width(viewportWidth);
 }
@@ -11,6 +14,7 @@ var name = "";
 var pass = "";
 var wins = 3;
 var looses = 7;
+var founded;
 
 
 function ajaxParser(msg, type) {
@@ -91,7 +95,13 @@ function letMeGo(feedback) {
   }
 
   function scoreCount() {
-    var sum = wins + looses;
+    var sum = parseInt(wins) + parseInt(looses);
+    var winsHeight = (wins/sum)*(0.8*viewportHeight);
+    var loosesHeight = (0.8*viewportHeight)-winsHeight;
+    $('#wins').height(winsHeight);
+    $('#looses').height(loosesHeight);
+    $('#wins').attr('title','You have won ' + wins + ' times.');
+    $('#looses').attr('title','You have lost ' + looses + ' times.'); 
   }
 
 // parse int nie dziala, bo chuj wie jaka tablice zwraca msg. wiec nie mozemy wygenerowac wielkosci paskow
@@ -101,9 +111,7 @@ function letMeGo(feedback) {
 function playPhase() {
   $('#log').hide();
   $('#myName').text("Welcome, " + name);
-  $('#wins').attr('title','You won ' + wins + ' times.');
-  $('#looses').attr('title','You lost ' + looses + ' times.');
-  winsCount();
+  winsCount();   
   $('#profil').show();
   $('#scores').show("slide", {direction: "down"}, 2500);
   $('#profil').addClass('animated fadeInDown');
@@ -128,7 +136,53 @@ function searchPhase(){
     $("#profil").hide();    
     $("#search").show();
     $("#search").addClass('animated fadeInDown');
+    $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setWaiting'}, 
+          success: function(msg){    
+            findPlayer();               
+                  
+          }
+      });     
   }
+
+function findPlayer() {  
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'findPlayer'}, 
+          success: function(msg){
+
+             if (msg != 'notfound') {
+              letsPlay(); 
+             } else {
+                findPlayer();
+             }             
+          }
+      });     
+}
+
+function letsPlay() {
+  $("#search").addClass('animated fadeOutDown'); 
+  setTimeout(gamePhase, 3000);
+}
+
+function gamePhase() {
+  init();
+  animate();
+  $('#search').hide();
+  $('#game').show();
+  $('#game').addClass('animated fadeInDown');
+}
+
+function setBusy() {
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setBusy'}         
+  })
+}
 
 $(document).ready( function(){
   resizetoView();

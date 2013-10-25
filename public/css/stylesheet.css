@@ -32,13 +32,6 @@ i { font-family: ubuntuitalic; }
 	-moz-animation-delay: 0.5s;
 	-webkit-animation-delay: 0.5s;
 }
-#head {
-	width: 100%;
-	text-align: right;
-	color: #fff;
-	font-family: 'ubuntulight';
-}
-
 
 
 #login, #pass {
@@ -81,16 +74,34 @@ i { font-family: ubuntuitalic; }
 	margin-left: -40px;
 }
 
+#head {
+	width: 100%;	
+	color: #fff;
+	font-family: 'ubuntulight';
+}
+
 #myName {
 	font-size: 25px;
-	padding-top: 20px;
-	padding-right: 20px;
+	padding-top: 16px;
+	padding-right: 10px;
+	float: right;
+	cursor: default;	
+}
+
+#killer	{
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	border: 2px solid #fff;
+	background: url(../images/logout_icon.png) 5px 4px no-repeat;
+	float: right;
+	cursor: pointer;
+
 }
 
 #search {
 	display: none;
 	margin-left: -50px;
-
 	color: white;
 	font-size: 2.5em;
 	font-family: ubuntulight;
@@ -102,7 +113,7 @@ i { font-family: ubuntuitalic; }
 #scores {
 	display: none;
 	width: 500px;
-	height: 95%;
+	height: 100%;
 	margin-left: 20px;
 	position: relative;
 	color: white;
@@ -115,7 +126,7 @@ i { font-family: ubuntuitalic; }
 	position: absolute;
 	bottom: 5px;
 	text-align: center;
-	padding-top: 50%;
+	
 
     opacity: .1;
     transition: opacity .2s ease-out;
@@ -124,19 +135,16 @@ i { font-family: ubuntuitalic; }
     -o-transition: opacity .2s ease-out;
 }
 #wins {
-	height: 600px;
     float: left;
-    padding-top: 50%;
-
     background: #A4E670;
 }
 
 #looses {
-	height: 300px;
     margin: 0 0 0 205px;
-
     background: #DE3961;
 }
+
+
 
 #wins:hover, #looses:hover {
 	opacity: 1;
@@ -150,6 +158,9 @@ i { font-family: ubuntuitalic; }
 	margin-top: 10px;
 }
 
+#game {
+	display: none;
+}
 
 input, textarea {
 	padding: 1px;

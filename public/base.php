@@ -15,8 +15,15 @@
 	        case 'getlooses' :  connect(); getLooses($nick); break;
 	        case 'checkSession' : checkSession(); break;
 	        case 'killMe' : killMe(); break;
+	        case 'findPlayer' : connect(); findPlayer(); break;
+	        case 'setOnline' : connect(); setOnline(); break;
+	        case 'setOffline' : connect(); setOffline(); break;
+	        case 'setBusy' : connect(); setBusy(); break;
+	        case 'setNotBusy' : connect(); setNotBusy(); break;
+	        case 'setWaiting' : connect(); setWaiting(); break;
+	        case 'setNotWaiting' : connect(); setNotWaiting(); break;
 	    }
-	}		
+		}		
 
 	function connect() {
 	$user_name = "root";
@@ -68,7 +75,7 @@
 	function insert($nick, $pass) {	
 		$SQL = "INSERT INTO players (login, password, wins, losses, score) VALUES ('$nick', '$pass', '0', '0', '0')";
 		mysql_query($SQL);
-		echo mysql_error();
+		
 
 	}
 
@@ -99,8 +106,73 @@
 
 	function killMe() {
 		echo 'killed';
-		session_start();
+		connect();
+		setNotBusy();
+		setOffline();
+		setNotWaiting();
+		session_start();		
 		session_destroy();
+	}
+
+	function findPlayer() {
+		session_start();
+		$SQL = "SELECT login, busy, waiting FROM players";
+		$result = mysql_query($SQL);
+		$found = false;
+
+			while ( $db_field = mysql_fetch_assoc($result) ) {
+				if ($db_field['waiting'] == 1 && $db_field['busy'] == 0 && $db_field['login'] != $_SESSION['login']) {					
+					echo $db_field['login'];
+					$found = true;
+					break;
+					} 				
+				}
+				if ($found == false) {
+					echo 'notfound';
+				}					
+			
+	}
+
+	function setOnline() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET online = '1' WHERE login = '$login'";
+		mysql_query($SQL);
+	}
+
+	function setOffline() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET online = '0' WHERE login = '$login'";
+		mysql_query($SQL);
+	}
+
+	function setBusy() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET busy = '1' WHERE login = '$login'";
+		mysql_query($SQL);
+	}
+
+	function setNotBusy() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET busy = '0' WHERE login = '$login'";
+		mysql_query($SQL);
+	}
+
+	function setWaiting() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET waiting = '1' WHERE login = '$login'";
+		mysql_query($SQL);
+	}
+
+	function setNotWaiting() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "UPDATE players SET waiting = '0' WHERE login = '$login'";
+		mysql_query($SQL);
 	}
 
 ?>
