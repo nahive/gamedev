@@ -56,6 +56,7 @@ function letMeGo(feedback) {
       if (feedback == 'valid' || feedback == 'notfound' || feedback == 'alreadyLogged') {        
           $('#logMe').addClass('animated bounceOut');
           $("#log").addClass('animated fadeOutDown');
+          setOnline();
          setTimeout(playPhase, 1500);
        } else if (feedback == 'invalid' ){
           $('#logMe').addClass('animated shake');
@@ -66,6 +67,15 @@ function letMeGo(feedback) {
       else {        
         window.alert("Please enter nick and pass")
       }   
+}
+
+function setOnline() {
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setOnline'}
+          
+        });
 }
 
   function winsCount() {
@@ -153,7 +163,6 @@ function findPlayer() {
           type: 'POST',
           data: {action: 'findPlayer'}, 
           success: function(msg){
-
              if (msg != 'notfound') {
               letsPlay(); 
              } else {
@@ -174,6 +183,7 @@ function gamePhase() {
   $('#search').hide();
   $('#game').show();
   $('#game').addClass('animated fadeInDown');
+  setBusy();
 }
 
 function setBusy() {
