@@ -9,6 +9,18 @@ function resizetoView(){
    $('#profil').width(viewportWidth);
 }
 
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {str = '0' + str;}
+    return str;
+}
+function formatTime(time) {
+    var min = parseInt(time / 6000),
+        sec = parseInt(time / 100) - (min * 60);
+    return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2);
+}
+
+
 
 var name = "";
 var pass = "";
@@ -28,11 +40,21 @@ function ajaxParser(msg, type) {
   console.log(name);
 }
 
+
+
+
 function loginPhase(){
  $('#log').show();
  $('#log').addClass('animated fadeInDown');
+ $("#log").keypress(function(event){
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if(keycode == '13'){
+      $('#logMe').click();   
+  }
 
-   // dla buttonu jakis ladna animacja 
+  });
+
+  $("#login").focus();
   $('#logMe').click(function(){
     
      name = $('[name=login]').val();
@@ -49,6 +71,8 @@ function loginPhase(){
 
   });
 }
+
+
 
 
 function letMeGo(feedback) {
@@ -106,8 +130,8 @@ function setOnline() {
 
   function scoreCount() {
     var sum = parseInt(wins) + parseInt(looses);
-    var winsHeight = (wins/sum)*(0.8*viewportHeight);
-    var loosesHeight = (0.8*viewportHeight)-winsHeight;
+    var winsHeight = (wins/sum)*(0.5*viewportHeight);
+    var loosesHeight = (0.5*viewportHeight)-winsHeight;
     $('#wins').height(winsHeight);
     $('#looses').height(loosesHeight);
     $('#wins').attr('title','You have won ' + wins + ' times.');
@@ -184,6 +208,26 @@ function gamePhase() {
   $('#game').show();
   $('#game').addClass('animated fadeInDown');
   setBusy();
+
+  var Clocker = new (function() {
+    var $stopwatch, // Stopwatch element on the page
+        incrementTime = 70, // Timer speed in milliseconds
+        currentTime = 0, // Current time in hundredths of a second
+        updateTimer = function() {
+            $stopwatch.html(formatTime(currentTime));
+            currentTime += incrementTime / 10;
+        },
+        init = function() {
+            $stopwatch = $('#timer');
+            Clocker.Timer = $.timer(updateTimer, incrementTime, true);
+        };
+    this.resetStopwatch = function() {
+        currentTime = 0;
+        this.Timer.stop().once();
+    };
+    $(init);
+  });
+
 }
 
 function setBusy() {
@@ -195,6 +239,8 @@ function setBusy() {
 }
 
 $(document).ready( function(){
+
+
   resizetoView();
   $(window).bind('resize', resizetoView); 
 
@@ -212,6 +258,12 @@ $(document).ready( function(){
             }
           }
         });
+
+$(document).on('mousemove', function(e){
+    $('#grass1').css('background-position-x',  e.pageX/16);
+    $('#grass2').css('background-position-x',  e.pageX/12);
+    $('#grass3').css('background-position-x',  e.pageX/8);
+  });
 
 
   

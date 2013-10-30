@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<!-- CREATED BY SZYMON MASLANKA and ADAM MATEJA-->
@@ -20,6 +20,8 @@
 	<script src="js_game/Keys.js"></script>
 	<script src="js_game/Player.js"></script>
 	<script src="js_game/game.js"></script>	
+    <script type="text/javascript" src="scripts/jquery.timer.js"></script>
+	
 
 </head>
 <body>
@@ -51,11 +53,19 @@
 			</div>
 		</div>
 		<div id="game">
-			<canvas id="gameCanvas"></canvas>
+			<div id="headerGame">
+				<span id="timer">00:00:00</span>
+			</div>
+			<div id="gameContent">
+				<canvas id="gameCanvas"></canvas>
+			</div>
+			
 		</div>
 	</div>
 	<div id="footer">
-
+		 <div id="grass1"></div>
+		 <div id="grass2"></div>
+		 <div id="grass3"></div>
 	</div>
 </body>
 </html>

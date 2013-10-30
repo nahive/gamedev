@@ -17,8 +17,9 @@ function init() {
 	ctx = canvas.getContext("2d");
 
 	// Maximise the canvas
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	canvas.width = 800;
+	canvas.height = 600;
+
 
 	// Initialise keyboard controls
 	keys = new Keys();
@@ -79,8 +80,8 @@ function onKeyup(e) {
 // Browser window resize
 function onResize(e) {
 	// Maximise the canvas
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	canvas.width = 800;
+	canvas.height = 600;
 };
 
 function onSocketConnected() {
@@ -156,6 +157,7 @@ function draw() {
 	localPlayer.draw(ctx);
 	// Draw remote players
 	var i;
+	console.log(remotePlayers.length);
 	for (i = 0; i < remotePlayers.length; i++) {
 	    remotePlayers[i].draw(ctx);
 	};
