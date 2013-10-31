@@ -20,6 +20,7 @@
 	<script src="js_game/Keys.js"></script>
 	<script src="js_game/Player.js"></script>
 	<script src="js_game/game.js"></script>	
+	<script src="js_game/Vec.js"></script>
     <script type="text/javascript" src="scripts/jquery.timer.js"></script>
 	
 

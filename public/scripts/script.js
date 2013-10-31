@@ -138,9 +138,7 @@ function setOnline() {
     $('#looses').attr('title','You have lost ' + looses + ' times.'); 
   }
 
-// parse int nie dziala, bo chuj wie jaka tablice zwraca msg. wiec nie mozemy wygenerowac wielkosci paskow
-
-
+// naprawic podwojny click
 
 function playPhase() {
   $('#log').hide();
@@ -151,8 +149,8 @@ function playPhase() {
   $('#profil').addClass('animated fadeInDown');
   $('#playMe').click(function() {
     $(this).addClass('animated rotateOut');
-        $("#profil").addClass('animated fadeOutDown');     
-       setTimeout(searchPhase, 1500);
+    $("#profil").addClass('animated fadeOutDown');     
+    setTimeout(searchPhase, 1500);        
   });
   $('#killer').click(function(){
     $.ajax({
@@ -236,6 +234,11 @@ function setBusy() {
           type: 'POST',
           data: {action: 'setBusy'}         
   })
+}
+
+function gameEnd(id){
+  console.log(id);
+  
 }
 
 $(document).ready( function(){

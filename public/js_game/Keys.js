@@ -3,7 +3,7 @@
 **************************************************/
 var Keys = function(up, left, right, down) {
 	var up = up || false,
-		left = left || false,
+		left = left || false, // do poprawy zaleznie od pozycji startowej
 		right = right || false,
 		down = down || false;
 		
@@ -13,35 +13,37 @@ var Keys = function(up, left, right, down) {
 		switch (c) {
 			// Controls
 			case 37: // Left
-				that.left = true;
+				if (that.right != true) {
+					that.left = true;
+					that.up = false;
+					that.right = false;
+					that.down = false;
+				}
 				break;
 			case 38: // Up
-				that.up = true;
+				if (that.down != true) {
+					that.left = false;
+					that.up = true;
+					that.right = false;
+					that.down = false;
+				}
 				break;
 			case 39: // Right
-				that.right = true; // Will take priority over the left key
+				if (that.left != true) {
+					that.left = false;
+					that.up = false;
+					that.right = true;
+					that.down = false;
+				}
+				 // Will take priority over the left key
 				break;
 			case 40: // Down
-				that.down = true;
-				break;
-		};
-	};
-	
-	var onKeyUp = function(e) {
-		var that = this,
-			c = e.keyCode;
-		switch (c) {
-			case 37: // Left
-				that.left = false;
-				break;
-			case 38: // Up
-				that.up = false;
-				break;
-			case 39: // Right
-				that.right = false;
-				break;
-			case 40: // Down
-				that.down = false;
+				if (that.up != true) {
+					that.left = false;
+					that.up = false;
+					that.right = false;
+					that.down = true;
+				}
 				break;
 		};
 	};
@@ -51,7 +53,6 @@ var Keys = function(up, left, right, down) {
 		left: left,
 		right: right,
 		down: down,
-		onKeyDown: onKeyDown,
-		onKeyUp: onKeyUp
+		onKeyDown: onKeyDown		
 	};
 };

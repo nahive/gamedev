@@ -5,8 +5,13 @@ var canvas,			// Canvas DOM element
 	ctx,			// Canvas rendering context
 	keys,			// Keyboard input
 	localPlayer,	// Local player
-	remotePlayers,
-	socket;
+	remotePlayers,	// Remote players
+	room,			// Room
+	socket,
+	enemyPositions;			// Socket connection
+
+var ended = false;
+
 
 /**************************************************
 ** GAME INITIALISATION
@@ -20,24 +25,26 @@ function init() {
 	canvas.width = 800;
 	canvas.height = 600;
 
-
 	// Initialise keyboard controls
 	keys = new Keys();
 
 	// Calculate a random start position for the local player
 	// The minus 5 (half a player size) stops the player being
 	// placed right on the egde of the screen
-	var startX = Math.round(Math.random()*(canvas.width-5)),
-		startY = Math.round(Math.random()*(canvas.height-5));
+
+	var startX = Math.round(Math.random()*(canvas.width-15)), // do wymyslenia jak zaczynac w rogach 
+		startY = Math.round(Math.random()*(canvas.height-15));
 
 	// Initialise the local player
 	localPlayer = new Player(startX, startY);
 
-	// connect to socket.io
+	// Initialise socket connection
 	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
 
-	// players online
+	// Initialise remote players array
 	remotePlayers = [];
+
+	enemyPositions = [];
 
 	// Start listening for events
 	setEventHandlers();
@@ -50,17 +57,24 @@ function init() {
 var setEventHandlers = function() {
 	// Keyboard
 	window.addEventListener("keydown", onKeydown, false);
-	window.addEventListener("keyup", onKeyup, false);
 
-	// Window resize
-	window.addEventListener("resize", onResize, false);
 
-	// socket listeners
+	// Socket connection successful
 	socket.on("connect", onSocketConnected);
+
+	// Socket disconnection
 	socket.on("disconnect", onSocketDisconnect);
+
+	// New player message received
 	socket.on("new player", onNewPlayer);
+
+	// Player move message received
 	socket.on("move player", onMovePlayer);
+
+	// Player removed message received
 	socket.on("remove player", onRemovePlayer);
+
+	socket.on("select room", onSelectRoom);
 };
 
 // Keyboard key down
@@ -77,50 +91,69 @@ function onKeyup(e) {
 	};
 };
 
-// Browser window resize
-function onResize(e) {
-	// Maximise the canvas
-	canvas.width = 800;
-	canvas.height = 600;
+// Socket assigned room
+function onSelectRoom(data){
+	console.log("In a room " + data.roomNo);
+	room = data.roomNo;
 };
 
+// Socket connected
 function onSocketConnected() {
-    console.log("Connected to socket server");
-    socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
+	console.log("Connected to socket server");
+
+	// Send local player data to the game server
+	socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
 };
 
+// Socket disconnected
 function onSocketDisconnect() {
-    console.log("Disconnected from socket server");
+	console.log("Disconnected from socket server");
 };
 
+// New player
 function onNewPlayer(data) {
-    console.log("New player connected: "+data.id);
-    var newPlayer = new Player(data.x, data.y);
+	console.log("New player connected: "+data.id);
+
+	// Initialise the new player
+	var newPlayer = new Player(data.x, data.y);
 	newPlayer.id = data.id;
+
+
+	// Add new player to the remote players array
 	remotePlayers.push(newPlayer);
 };
 
+// Move player
 function onMovePlayer(data) {
-	var movePlayer = playerById(data.id);
+	if(data.roomNo == room){
+		var movePlayer = playerById(data.id);
+		// console.log('Recieved movement of ' + data.id + " from room " + data.roomNo + ", but my room " + room);
+		// Player not found
+		if (!movePlayer) {
+			console.log("Player not found3: "+data.id);
+			return;
+		};
 
-	if (!movePlayer) {
-	    console.log("Player not found: "+data.id);
-	    return;
-	};
-
-	movePlayer.setX(data.x);
-	movePlayer.setY(data.y);
+		enemyPositions.push(new Vec(data.x, data.y));
+		// Update player position
+		movePlayer.setX(data.x);
+		movePlayer.setY(data.y);
+	}
 };
 
+// Remove player
 function onRemovePlayer(data) {
-	var removePlayer = playerById(data.id);
+		var removePlayer = playerById(data.id);
 
-	if (!removePlayer) {
-	    console.log("Player not found: "+data.id);
-	    return;
-	};
+		// Player not found
+		if (!removePlayer) {
+			// console.log("Player not foun4: "+data.id);
+			return;
+		};
 
-	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+		// Remove player from array
+		remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+	
 };
 
 
@@ -128,11 +161,13 @@ function onRemovePlayer(data) {
 ** GAME ANIMATION LOOP
 **************************************************/
 function animate() {
-	update();
-	draw();
+	if(!ended){
+		update();
+		draw();
 
-	// Request a new animation frame using Paul Irish's shim
-	window.requestAnimFrame(animate);
+		// Request a new animation frame using Paul Irish's shim
+		window.requestAnimFrame(animate);
+	}
 };
 
 
@@ -140,9 +175,16 @@ function animate() {
 ** GAME UPDATE
 **************************************************/
 function update() {
+	// Update local player and check for change
 	if (localPlayer.update(keys)) {
-    socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-};
+		// Send local player data to the game server
+		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY(), roomNo: room});
+	};
+	if(localPlayer.checkCollisions(enemyPositions)){
+		ended = true;
+		//socket.emit("game ended"); // dopisac konczenie gry
+		//gameEnd(localPlayer.id);
+	}
 };
 
 
@@ -154,21 +196,26 @@ function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	// Draw the local player
-	localPlayer.draw(ctx);
-	// Draw remote players
+	localPlayer.draw(ctx, enemyPositions);
+
+	// Draw the remote players
 	var i;
-	console.log(remotePlayers.length);
 	for (i = 0; i < remotePlayers.length; i++) {
-	    remotePlayers[i].draw(ctx);
+		remotePlayers[i].draw(ctx, enemyPositions);
 	};
 };
 
-function playerById(id) {
-    var i;
-    for (i = 0; i < remotePlayers.length; i++) {
-        if (remotePlayers[i].id == id)
-            return remotePlayers[i];
-    };
 
-    return false;
+/**************************************************
+** GAME HELPER FUNCTIONS
+**************************************************/
+// Find player by ID
+function playerById(id) {
+	var i;
+	for (i = 0; i < remotePlayers.length; i++) {
+		if (remotePlayers[i].id == id)
+			return remotePlayers[i];
+	};
+	
+	return false;
 };
