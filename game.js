@@ -20,6 +20,7 @@ var socket,		// Socket controller
 **************************************************/
 function init() {
 	// Create an empty array to store players
+
 	players = [];
 	ppl = 0;
 	room = 0;
@@ -62,13 +63,13 @@ function onSocketConnection(client) {
 	// Listen for move player message
 	client.on("move player", onMovePlayer);
 
-	client.on("game ended", onGameEnd());
+	// Listen for game end
+	client.on("game end", onGameEnd);
 };
 
 // Socket client has disconnected
 function onClientDisconnect() {
 	util.log("Player has disconnected: "+this.id);
-
 	var removePlayer = playerById(this.id);
 	var dcRoom = players[players.indexOf(removePlayer)].room;
 	//util.log("from room " + dcRoom);
@@ -93,6 +94,8 @@ function onGameEnd(){
 // New player has joined
 function onNewPlayer(data) {
 	ppl++;
+
+	util.log('new');
 
 	// Create a new player
 	var newPlayer = new Player(data.x, data.y);

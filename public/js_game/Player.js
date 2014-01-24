@@ -56,17 +56,21 @@ var Player = function(startX, startY) {
 		ctx.save()
 		ctx.scale(1,1);
 		ctx.beginPath();
-		ctx.arc(x-5, y-5, 10, 0, Math.PI*2, false);
-		ctx.lineWidth = 5;
-		ctx.strokeStyle = "#000";
+		ctx.arc(x-3, y-3, 7, 0, Math.PI*2, false);
+		ctx.fillStyle = "#fff";
+		ctx.fill();
+		ctx.lineWidth = 10;
+		ctx.strokeStyle = "#fff";
 		ctx.stroke();
 		ctx.closePath();
 		ctx.restore();
 		for(var i = 0; i < positions.length; i++){
+			ctx.fillStyle = "#fff";
 			ctx.fillRect(positions[i].getX()-10, positions[i].getY()-10, 5,5);
 		}
 
 		for(var i = 0; i < enemyPositions.length; i++){
+			ctx.fillStyle = "#fff";
 			ctx.fillRect(enemyPositions[i].getX()-10, enemyPositions[i].getY()-10, 5,5);
 		}
 	};

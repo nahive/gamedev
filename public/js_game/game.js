@@ -11,6 +11,7 @@ var canvas,			// Canvas DOM element
 	enemyPositions;			// Socket connection
 
 var ended = false;
+var won = false;
 
 
 /**************************************************
@@ -39,13 +40,14 @@ function init() {
 	localPlayer = new Player(startX, startY);
 
 	// Initialise socket connection
-	socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+	socket = io.connect("localhost/", {port: 8000, transports: ["websocket"]});
 
 	// Initialise remote players array
 	remotePlayers = [];
 
 	enemyPositions = [];
 
+	console.log("polaczylem");
 	// Start listening for events
 	setEventHandlers();
 };
@@ -100,7 +102,8 @@ function onSelectRoom(data){
 // Socket connected
 function onSocketConnected() {
 	console.log("Connected to socket server");
-
+	ended = false;
+	won = false;
 	// Send local player data to the game server
 	socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
 };
@@ -153,8 +156,24 @@ function onRemovePlayer(data) {
 
 		// Remove player from array
 		remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
+		ended = true;
+		won = true;
+		socket.emit("game end");
+
+	
+		youWon();
 	
 };
+
+function youWon() {
+	console.log('wygrales');
+	gameEnd(1);
+};
+
+function youLost() {
+	console.log('przegrales');
+	gameEnd(0);
+}
 
 
 /**************************************************
@@ -164,9 +183,11 @@ function animate() {
 	if(!ended){
 		update();
 		draw();
-
 		// Request a new animation frame using Paul Irish's shim
 		window.requestAnimFrame(animate);
+	} else if (!won) {
+		socket.emit("game end");
+		youLost();
 	}
 };
 
@@ -182,8 +203,6 @@ function update() {
 	};
 	if(localPlayer.checkCollisions(enemyPositions)){
 		ended = true;
-		//socket.emit("game ended"); // dopisac konczenie gry
-		//gameEnd(localPlayer.id);
 	}
 };
 

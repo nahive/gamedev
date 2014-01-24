@@ -141,6 +141,8 @@ function setOnline() {
 // naprawic podwojny click
 
 function playPhase() {
+  $('#endGameWon').hide();
+  $('#endGameLost').hide();
   $('#log').hide();
   $('#myName').text("Welcome, " + name);
   winsCount();   
@@ -234,12 +236,52 @@ function setBusy() {
           type: 'POST',
           data: {action: 'setBusy'}         
   })
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setNotWaiting'}         
+  })
 }
 
 function gameEnd(id){
-  console.log(id);
-  
-}
+  if (id == 1) {
+    $("#game").addClass("animated fadeOutDown");
+    $("#game").hide();
+    $("#endGameWon").show();
+    $("#endGameWon").addClass("animated fadeInDown");
+    $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setWins'},
+          success: function(msg){
+               
+          }         
+  })    
+  } else if (id == 0){
+    $("#game").addClass("animated fadeOutDown");
+    $("#game").hide();
+    $("#endGameLost").show();
+    $("#endGameLost").addClass("animated fadeInDown");
+    $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setLooses'},
+          success: function(msg){
+                   
+          }            
+  })
+  }
+
+  $.ajax({
+          url: 'base.php',
+          type: 'POST',
+          data: {action: 'setNotBusy'}         
+  })
+ 
+     
+  setTimeout(function(){window.location.reload();}, 5000);}
+
+
 
 $(document).ready( function(){
 

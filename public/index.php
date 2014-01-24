@@ -39,13 +39,16 @@
 					<img src="images/loader.gif">
 				</div>
 		</div>
+		<div id="endGameWon">
+			<h1 id="winner">You Won!</h1>
+		</div>
+		<div id="endGameLost">
+			<h1 id="looser">You Lost.</h1>
+		</div>
 		<div id="profil"> 
 			<header id="head">
 			<input type="button" id='killer'>
 				<p id="myName"></p>
-
-				
-
 			</header>
 			<input id="playMe" type="button" value="Play">
 			<div id="scores">
@@ -59,9 +62,8 @@
 			</div>
 			<div id="gameContent">
 				<canvas id="gameCanvas"></canvas>
-			</div>
-			
-		</div>
+			</div>			
+		</div>		
 	</div>
 	<div id="footer">
 		 <div id="grass1"></div>

@@ -22,6 +22,8 @@
 	        case 'setNotBusy' : connect(); setNotBusy(); break;
 	        case 'setWaiting' : connect(); setWaiting(); break;
 	        case 'setNotWaiting' : connect(); setNotWaiting(); break;
+	        case 'setWins' : connect(); setWins(); break;
+	        case 'setLooses' : connect(); setLooses(); break;
 	    }
 		}		
 
@@ -73,7 +75,7 @@
 	}
 
 	function insert($nick, $pass) {	
-		$SQL = "INSERT INTO players (login, password, wins, losses, score) VALUES ('$nick', '$pass', '0', '0', '0')";
+		$SQL = "INSERT INTO players (login, password, wins, looses, score) VALUES ('$nick', '$pass', '0', '0', '0')";
 		mysql_query($SQL);
 		
 
@@ -87,10 +89,10 @@
 	}
 
 	function getLooses($nick) {
-		$SQL = "SELECT losses FROM players WHERE login = '$nick'";
+		$SQL = "SELECT looses FROM players WHERE login = '$nick'";
 		$result = mysql_query($SQL);
 		$db_field = mysql_fetch_assoc($result);
-		echo $db_field['losses'];
+		echo $db_field['looses'];
 	}
 
 	function checkSession() {
@@ -173,6 +175,32 @@
 		$login = $_SESSION['login'];
 		$SQL = "UPDATE players SET waiting = '0' WHERE login = '$login'";
 		mysql_query($SQL);
+	}	
+
+	function setWins() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "SELECT wins FROM players WHERE login = '$login'";
+		$result = mysql_query($SQL);
+		$db_field = mysql_fetch_assoc($result);
+		$wins = $db_field['wins'];
+		$wins++;
+		$SQL = "UPDATE players SET wins = '$wins' WHERE login = '$login'";
+		mysql_query($SQL);
+		echo $wins;
+	}
+
+	function setLooses() {
+		session_start();
+		$login = $_SESSION['login'];
+		$SQL = "SELECT looses FROM players WHERE login = '$login'";
+		$result = mysql_query($SQL);
+		$db_field = mysql_fetch_assoc($result);
+		$looses = $db_field['looses'];
+		$looses++;
+		$SQL = "UPDATE players SET looses = '$looses' WHERE login = '$login'";
+		mysql_query($SQL);
+		echo $looses;
 	}
 
 ?>
